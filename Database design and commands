@@ -1,0 +1,45 @@
+Contacts table important information:
+
+From the small project powerpoint:
+The minimum information each contact record needs is:
+- Name (prefer First/Last Name)
+- Email
+- Phone
+- Date record created
+
+I added another section for user attribution to keep the contacts connected to the specific user that made them so that they can be easily shown to each user
+
+This is the command used to create the contacts table:
+
+CREATE TABLE Contacts (
+ 	FirstName varchar(50) Not Null,
+ 	LastName varchar(50) Not Null,
+ 	Email varchar(50),
+ 	Phone varchar(50),
+ 	DateCreated date Not Null,
+	User Attribution varchar(50) Not Null
+)
+
+User table important information:
+The Usernames are kept unique to prevent misattribution of created contacts
+
+This is the command i used to create the users table:
+
+CREATE TABLE Users (
+Username varchar(50) PRIMARY KEY,
+UserPassword varchar(50) Not Null
+    )
+
+
+(Ill fill this out soon with templates)
+Necessary commands:
+
+User sign up
+
+Add user
+
+edit contacts
+
+delete contacts
+
+search contacts
