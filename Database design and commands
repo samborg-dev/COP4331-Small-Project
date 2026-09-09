@@ -17,7 +17,7 @@ CREATE TABLE Contacts (
  	Email varchar(50),
  	Phone varchar(50),
  	DateCreated date Not Null,
-	User Attribution varchar(50) Not Null
+	UserAttribution varchar(50) Not Null
 )
 
 User table important information:
@@ -31,15 +31,145 @@ UserPassword varchar(50) Not Null
     )
 
 
-(Ill fill this out soon with templates)
-Necessary commands:
+Prepared statements:
+///////////////
+Login:
+This searches for the specific user and returns the password. My idea is that the api can compare the password returned to the password given to allow login.
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Login`(
+	IN LoginUser varchar(50)
+    
+)
+BEGIN
+SELECT UserPassword FROM Users WHERE Username = LoginUser;
+END
 
-User sign up
+///////////////
+Add contact:
+This ones pretty self explanatory it just adds a contact into the contacts table. I added the User Attribution column to keep track of which user each contact belongs too.
 
-Add user
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addContact`(
+	IN NewFirstName varchar(50),
+ 	IN NewLastName varchar(50),
+ 	IN NewEmail varchar(50),
+ 	IN NewPhone varchar(50),
+ 	IN NewDateCreated date,
+	IN NewUserAttribution varchar(50) 
+)
+BEGIN
+	INSERT INTO Contacts (FirstName,LastName,Email,Phone,DateCreated,UserAttribution)
+	VALUES (NewFirstName,NewLastName,NewEmail,NewPhone,NewDateCreated,NewUserAttribution);
+END
 
-edit contacts
+///////////////
+edit contacts:
+I created many stored procedures for this to alter each aspect of a column individually. The only one which cant be edited is user attribution.
 
-delete contacts
+CREATE DEFINER=`root`@`localhost` PROCEDURE `AlterPhone`(
+	IN NewPhoneNumber VARCHAR(50),
+    IN SearchFirstName VARCHAR(50),
+    IN SearchLastName VARCHAR(50),
+    IN SearchUserAttribution VARCHAR(50)
+)
+BEGIN
+	UPDATE Contacts 
+    SET Phone = NewPhoneNumber
+    WHERE FirstName = SearchFirstName AND LastName = SearchLastName AND UserAttribution = SearchUserAttribution;
+END
 
-search contacts
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `AlterName`(
+	IN NewPhoneNumber VARCHAR(50),
+    IN SearchFirstName VARCHAR(50),
+    IN SearchDelLastName VARCHAR(50),
+    IN SearchDelUserAttribution VARCHAR(50)
+)
+BEGIN
+	UPDATE Contacts 
+    SET Phone = NewPhoneNumber
+    WHERE SearchFirstName = SearchFirstName AND LastName = SearchLastName AND UserAttribution = SearchUserAttribution;
+END
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `AlterLastName`(
+	IN NewLastName VARCHAR(50),
+    IN SearchFirstName VARCHAR(50),
+    IN SearchLastName VARCHAR(50),
+    IN SearchUserAttribution VARCHAR(50)
+)
+BEGIN
+	UPDATE Contacts 
+    SET LastName = NewLastName
+    WHERE FirstName = SearchFirstName AND LastName = SearchLastName AND UserAttribution = SearchUserAttribution;
+END
+
+
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `AlterFirstName`(
+	IN NewFirstName VARCHAR(50),
+    IN SearchFirstName VARCHAR(50),
+    IN SearchLastName VARCHAR(50),
+    IN SearchUserAttribution VARCHAR(50)
+)
+BEGIN
+	UPDATE Contacts 
+    SET FirstName = NewFirstName
+    WHERE SearchFirstName = SearchFirstName AND LastName = SearchLastName AND UserAttribution = SearchUserAttribution;
+END
+
+
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `AlterEmail`(
+	IN NewEmail VARCHAR(50),
+    IN SearchFirstName VARCHAR(50),
+    IN SearchLastName VARCHAR(50),
+    IN SearchUserAttribution VARCHAR(50)
+)
+BEGIN
+	UPDATE Contacts 
+    SET Email = NewEmail
+    WHERE FirstName = SearchFirstName AND LastName = SearchLastName AND UserAttribution = SearchUserAttribution;
+END
+
+
+
+///////////////
+Delete Contact:
+This one is also pretty self explanatory it just deletes a row in the contacts table
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `DeleteContact`(
+	IN DelFirstName VARCHAR(50),
+    IN DelLastName VARCHAR(50),
+    IN DelUserAttribution VARCHAR(50)
+
+)
+BEGIN
+DELETE FROM Contacts WHERE FirstName = DelFirstName AND LastName = DelLastName AND UserAttribution = DelUserAttribution;
+
+END
+
+
+///////////////
+search contacts:
+This procedure uses the percentage sign to search for partial names so that if a person is named Noah and they type in ‘No’ the contact will show up. I might add a space in the concat first name and last name section to better match partial first name plus last name searches.
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ContactSearch`(
+	IN SearchAttribution VARCHAR(50),
+    IN SearchName VARCHAR(50)
+)
+BEGIN
+SELECT * FROM Contacts WHERE UserAttribution = SearchAttribution AND CONCAT(FirstName,LastName)  like concat('%',SearchName,'%');
+END
+
+Sign Up:
+This creates a new user, the username must be unique and the procedure will fail if its not. This is so we don't have identical users  whose contacts are mixed together.
+CREATE DEFINER=`root`@`localhost` PROCEDURE `AddUser`(
+	IN NewUser varchar(50),
+    IN NewPassword varchar(50)
+
+)
+BEGIN
+	INSERT INTO Users (Username, UserPassword)
+	VALUES (NewUser,NewPassword);
+END
+
