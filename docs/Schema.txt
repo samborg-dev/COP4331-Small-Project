@@ -1,0 +1,232 @@
+﻿Contacts table Schema:
+
+
+DROP TABLE IF EXISTS `Contacts`;
+
+
+CREATE TABLE `Contacts` (
+  `FirstName` varchar(50) NOT NULL,
+  `LastName` varchar(50) NOT NULL,
+  `Email` varchar(50) DEFAULT NULL,
+  `Phone` varchar(50) DEFAULT NULL,
+  `DateCreated` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `DateUpdated` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `ContactID` int NOT NULL AUTO_INCREMENT,
+  `UserID` int NOT NULL,
+  PRIMARY KEY (`ContactID`),
+  KEY `UserID_Index` (`UserID`),
+  CONSTRAINT `fk_UserID` FOREIGN KEY (`UserID`) REFERENCES `Users` (`UserID`) ON DELETE CASCADE
+)
+
+
+
+
+User table Schema:
+DROP TABLE IF EXISTS `Users`;
+
+
+
+
+CREATE TABLE `Users` (
+  `PasswordHash` varchar(150) NOT NULL,
+  `UserID` int NOT NULL AUTO_INCREMENT,
+  `FirstName` varchar(50) NOT NULL,
+  `LastName` varchar(50) NOT NULL,
+  `CreatedAt` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `MiddleName` varchar(50) NOT NULL,
+  `UserName` varchar(50) NOT NULL,
+  `Email` varchar(50) DEFAULT NULL,
+  `Phone` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`UserID`)
+)
+
+
+Stored Procedures:
+(We might not need these but this is what I have for now)
+
+
+
+
+Add Contact:
+
+
+DELIMITER //
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addContact`(
+        IN NewFirstName Nvarchar(50),
+         IN NewLastName varchar(50),
+         IN NewEmail varchar(50),
+         IN NewPhone varchar(50),
+        IN NewUserID varchar(50)
+)
+BEGIN
+        INSERT INTO Contacts (FirstName,LastName,Email,Phone,UserID)
+        VALUES (NewFirstName,NewLastName,NewEmail,NewPhone,NewUserID);
+END ;
+DELIMITER ;
+
+
+
+
+Add User:
+
+
+
+
+DELIMITER //
+CREATE DEFINER=`root`@`localhost` PROCEDURE `AddUser`(
+    IN NewFirst varchar(50),
+    IN NewLast varchar(50),
+    IN NewMiddle varchar(50),
+    IN NewPhone varchar(50),
+    IN NewEmail varchar(50),
+    IN NewUser varchar(50),
+    IN NewPassword varchar(150)
+
+
+)
+BEGIN
+        INSERT INTO Users (FirstName,LastName,MiddleName,UserName,Email,Phone,PasswordHash)
+        VALUES (NewFirst,NewLast,NewMiddle,NewUser,NewEmail,NewPhone,NewPassword);
+END //
+DELIMITER ;
+
+
+
+
+Edit Email:
+
+
+
+
+DELIMITER //
+CREATE DEFINER=`root`@`localhost` PROCEDURE `AlterEmail`(
+    IN NewEmail VARCHAR(50),
+    IN SearchFirstName VARCHAR(50),
+    IN SearchLastName VARCHAR(50),
+    IN SearchUserID VARCHAR(50)
+)
+BEGIN
+        UPDATE Contacts 
+    SET Email = NewEmail
+    WHERE FirstName = SearchFirstName AND LastName = SearchLastName AND UserID = SearchUserID;
+END //
+DELIMITER ;
+
+
+Edit Last Name:
+
+
+DELIMITER //
+CREATE DEFINER=`root`@`localhost` PROCEDURE `AlterFirstName`(
+    IN NewFirstName VARCHAR(50),
+    IN SearchFirstName VARCHAR(50),
+    IN SearchLastName VARCHAR(50),
+    IN SearchUserID VARCHAR(50)
+)
+BEGIN
+        UPDATE Contacts 
+    SET FirstName = NewFirstName
+    WHERE SearchFirstName = SearchFirstName AND LastName = SearchLastName AND UserID = SearchUserID;
+END //
+DELIMITER ;
+
+
+
+
+Edit Last Name:
+
+
+DELIMITER //
+CREATE DEFINER=`root`@`localhost` PROCEDURE `AlterLastName`(
+        IN NewLastName VARCHAR(50),
+    IN SearchFirstName VARCHAR(50),
+    IN SearchLastName VARCHAR(50),
+    IN SearchUserID VARCHAR(50)
+)
+BEGIN
+        UPDATE Contacts 
+    SET LastName = NewLastName
+    WHERE FirstName = SearchFirstName AND LastName = SearchLastName AND UserID = SearchUserID;
+END //
+DELIMITER ;
+
+
+
+
+
+
+Edit Phone Number:
+
+
+DELIMITER //
+CREATE DEFINER=`root`@`localhost` PROCEDURE `AlterPhone`(
+        IN NewPhoneNumber VARCHAR(50),
+    IN SearchFirstName VARCHAR(50),
+    IN SearchLastName VARCHAR(50),
+    IN SearchUserID VARCHAR(50)
+)
+BEGIN
+        UPDATE Contacts 
+    SET Phone = NewPhoneNumber
+    WHERE UserID = SearchUserID AND FirstName = SearchFirstName AND LastName = SearchLastName;
+END //
+DELIMITER ;
+
+
+
+
+Contact Search:
+DELIMITER //
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ContactSearch`(
+        IN SearchUserID VARCHAR(50),
+    IN SearchName VARCHAR(50)
+)
+BEGIN
+SELECT * FROM Contacts WHERE UserID = SearchUserID AND CONCAT(FirstName,LastName)  like concat('%',SearchName,'%');
+END //
+DELIMITER ;
+
+
+
+
+
+
+
+
+
+
+Delete Contact:
+
+
+
+
+DELIMITER //
+CREATE DEFINER=`root`@`localhost` PROCEDURE `DeleteContact`(
+        IN DelFirstName VARCHAR(50),
+    IN DelLastName VARCHAR(50),
+    IN DelUserID VARCHAR(50)
+
+
+)
+BEGIN
+DELETE FROM Contacts WHERE UserID = DelUserID and FirstName = DelFirstName AND LastName = DelLastName;
+
+
+END //
+DELIMITER ;
+
+
+
+
+Login:
+
+
+DELIMITER //
+CREATE DEFINER=`root`@`localhost` PROCEDURE `Login`(
+        IN LoginUser varchar(50)
+    
+)
+BEGIN
+SELECT PasswordHash FROM Users WHERE Username = LoginUser;
+END //
+DELIMITER ;
