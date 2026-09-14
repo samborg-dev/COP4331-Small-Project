@@ -1,0 +1,13 @@
+# Real DB credentials — never commit. Copy config.example.php to config.php on
+# the server and fill in the real password there.
+api/config.php
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# Logs
+*.log
