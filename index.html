@@ -13,9 +13,41 @@
   <main>
     <h1>Contact Manager</h1>
 
-    <!-- TODO: login form -->
-    <!-- TODO: register form -->
-    <!-- TODO: a visible element for error messages -->
+    <section id="login-section" aria-labelledby="login-heading">
+      <h2 id="login-heading">Sign in</h2>
+      <form id="login-form">
+        <p id="login-error" role="alert" aria-live="polite"></p>
+        <label for="login-username">Username</label>
+        <input id="login-username" name="login" type="text" required>
+
+        <label for="login-password">Password</label>
+        <input id="login-password" name="password" type="password" required>
+
+        <button type="submit">Sign in</button>
+      </form>
+      <p>Need an account? <a href="#register-section">Create one</a></p>
+    </section>
+
+    <section id="register-section" aria-labelledby="register-heading">
+      <h2 id="register-heading">Create an account</h2>
+      <form id="register-form">
+        <p id="register-error" role="alert" aria-live="polite"></p>
+        <label for="register-first-name">First name</label>
+        <input id="register-first-name" name="firstName" type="text" required>
+
+        <label for="register-last-name">Last name</label>
+        <input id="register-last-name" name="lastName" type="text" required>
+
+        <label for="register-username">Username</label>
+        <input id="register-username" name="login" type="text" required>
+
+        <label for="register-password">Password</label>
+        <input id="register-password" name="password" type="password" required>
+
+        <button type="submit">Register</button>
+      </form>
+      <p>Already have an account? <a href="#login-section">Sign in</a></p>
+    </section>
   </main>
 
   <script src="js/login.js"></script>
