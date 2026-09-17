@@ -12,4 +12,11 @@ require_once __DIR__ . '/db.php';
 
 $userId = requireLogin();
 
-sendError('Not implemented');
+$input = getJsonInput();
+
+$stmt = $pdo->prepare("DELETE FROM Contacts WHERE ContactID = ? AND UserID = ?");
+
+$stmt->execute([$input['id'], $userId]);
+
+sendJson(['error' => '']);
+
