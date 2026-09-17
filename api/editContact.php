@@ -13,4 +13,14 @@ require_once __DIR__ . '/db.php';
 
 $userId = requireLogin();
 
-sendError('Not implemented');
+$input = getJsonInput();
+
+$stmt = $pdo->prepare("UPDATE Contacts SET FirstName = ?, LastName = ?, Phone = ?, Email = ? WHERE ContactID = ? AND UserID = ?");
+
+$stmt->execute([$input['firstName'], $input['lastName'], $input['phone'], $input['email'], $input['id'], $userId]);
+
+if ($stmt->rowCount() === 0) {
+    sendError('Contact not found');
+}
+
+sendJson(['error' => '']);
