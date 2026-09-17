@@ -15,7 +15,7 @@ try {
         PDO::ATTR_EMULATE_PREPARES => false,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
     ]);
-} catch (PDOException $e) {
+} catch (\PDOException $e) {
     // Log the real reason, but don't leak it to the browser.
     error_log('DB connection failed: ' . $e->getMessage());
     http_response_code(500);
