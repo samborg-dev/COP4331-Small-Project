@@ -1,21 +1,31 @@
 <?php
-// POST /api/searchContacts.php
-//
-// send:     { "search": "smi" }
-// returns:  { "results": [ { "id": 1, "firstName": "John", "lastName": "Smith",
-//                            "phone": "407-555-0100", "email": "j@x.com" } ],
-//             "error": "" }
-//
-// This is the 5-point rubric item. Requirements:
-//   - partial match — wrap the term in % on BOTH sides so "smi" finds "Smith"
-//   - scoped to the session user with WHERE UserID = ?
-//   - an empty search term becomes %% and returns everything (that's intended —
-//     it's how the full list loads)
-//   - prepared statement, never string concatenation
 
 require_once __DIR__ . '/helpers.php';
 require_once __DIR__ . '/db.php';
 
-$userId = requireLogin();
+function ContactsSearch(){
 
-sendError('Not implemented');
+$userId = requireLogin();
+$input = getJsonInput();
+
+// wraps the name with '%' which allows for partial search
+$searchTerm = '%' . $input['search'] . '%';
+
+$searchQuery = $pdo->prepare("SELECT ContactID, FirstName, LastName, phone, email from Contacts WHERE UserID = ? AND CONCAT(FirstName,' ',LastName) LIKE ?");
+$searchQuery->execute($userID,$searchTerm);
+
+//checks if there is a match for the name searched
+if($searchQuery->rowCount() == 0)
+{
+	sendError('No Match');
+	
+}else{
+
+//Creates array of associative arrays detailing information
+$searchResults = $searchQuery->fetchAll(PDO::FETCH_ASSOC);
+
+sendError("");
+return $searchResults;
+}
+
+}
