@@ -10,33 +10,37 @@
   <!-- Landing page: login + register, toggled with a link.
        Use real form semantics — <form>, a <label for> on every <input>,
        <button type="submit">. That's most of the Lighthouse score. -->
-  <main>
-    <h1>Contact Manager</h1>
+  <main class="auth-page">
+    <p class="eyebrow">Contact Manager</p>
+    <h1>Welcome back</h1>
 
-    <section id="login-section" aria-labelledby="login-heading">
+    <section id="login-section" class="auth-section" aria-labelledby="login-heading">
       <h2 id="login-heading">Sign in</h2>
       <form id="login-form">
-        <p id="login-error" role="alert" aria-live="polite"></p>
+        <p id="login-error" class="status-message" role="alert" aria-live="polite"></p>
         <label for="login-username">Username</label>
         <input id="login-username" name="login" type="text" required>
 
         <label for="login-password">Password</label>
         <input id="login-password" name="password" type="password" required>
 
-        <button type="submit">Sign in</button>
+        <button class="button button-primary" type="submit">Sign in</button>
       </form>
       <p>Need an account? <a href="#register-section">Create one</a></p>
     </section>
 
-    <section id="register-section" aria-labelledby="register-heading">
+    <section id="register-section" class="auth-section" aria-labelledby="register-heading">
       <h2 id="register-heading">Create an account</h2>
       <form id="register-form">
-        <p id="register-error" role="alert" aria-live="polite"></p>
+        <p id="register-error" class="status-message" role="alert" aria-live="polite"></p>
         <label for="register-first-name">First name</label>
         <input id="register-first-name" name="firstName" type="text" required>
 
         <label for="register-last-name">Last name</label>
         <input id="register-last-name" name="lastName" type="text" required>
+
+        <label for="register-phone">Phone number</label>
+        <input id="register-phone" name="phone" type="tel" required>
 
         <label for="register-username">Username</label>
         <input id="register-username" name="login" type="text" required>
@@ -44,12 +48,13 @@
         <label for="register-password">Password</label>
         <input id="register-password" name="password" type="password" required>
 
-        <button type="submit">Register</button>
+        <button class="button button-primary" type="submit">Register</button>
       </form>
       <p>Already have an account? <a href="#login-section">Sign in</a></p>
     </section>
   </main>
 
+  <script src="js/api.js"></script>
   <script src="js/login.js"></script>
 </body>
 </html>

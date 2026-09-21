@@ -1,3 +1,414 @@
-/* One font, a small palette, generous spacing. Keep text/background contrast at
-   4.5:1 or better — Lighthouse checks it and it's 5 points.
-   Must hold up at phone width; the instructor may resize the browser. */
+:root {
+   --ink: #20302f;
+   --muted: #62716d;
+   --paper: #f5f4ee;
+   --panel: #fffef9;
+   --line: #d8ded7;
+   --teal: #176b68;
+   --teal-dark: #0f4d4b;
+   --coral: #d86b4f;
+   --shadow: 0 18px 45px rgba(32, 48, 47, .08);
+}
+
+* {
+   box-sizing: border-box;
+}
+
+body {
+   margin: 0;
+   min-width: 320px;
+   color: var(--ink);
+   background: var(--paper);
+   font-family: Georgia, serif;
+   line-height: 1.5;
+}
+
+main {
+   width: min(1260px, calc(100% - 40px));
+   margin: 0 auto;
+   padding: 40px 0 72px;
+}
+
+h1,
+h2,
+p {
+   margin-top: 0;
+}
+
+h1 {
+   margin-bottom: 8px;
+   font-size: clamp(2.3rem, 6vw, 4.8rem);
+   line-height: .98;
+   letter-spacing: -.03em;
+}
+
+h2 {
+   margin-bottom: 0;
+   font-size: 1.55rem;
+}
+
+.eyebrow {
+   margin-bottom: 8px;
+   color: var(--coral);
+   font: 700 .72rem/1.2 Georgia, serif;
+   letter-spacing: .14em;
+   text-transform: uppercase;
+}
+
+.page-header,
+.section-heading {
+   display: flex;
+   align-items: flex-end;
+   justify-content: space-between;
+   gap: 24px;
+}
+
+.contacts-page {
+   display: grid;
+   grid-template-columns: 190px minmax(0, 1fr);
+   gap: 36px;
+}
+
+.action-rail {
+   min-height: 680px;
+   border-right: 1px solid var(--line);
+   padding: 10px 28px 0 0;
+}
+
+.rail-actions {
+   margin-top: 68px;
+}
+
+.rail-actions .button {
+   width: 100%;
+}
+
+.action-rail .editor-panel {
+   margin: 28px 0 0;
+   padding: 0;
+   border: 0;
+   box-shadow: none;
+}
+
+.action-rail .editor-panel .section-heading {
+   display: none;
+}
+
+.contacts-content {
+   min-width: 0;
+}
+
+.button {
+   border: 0;
+   border-radius: 3px;
+   cursor: pointer;
+   padding: 12px 18px;
+   font: 700 .82rem Georgia, serif;
+   letter-spacing: .04em;
+}
+
+.button-primary {
+   color: #fff;
+   background: var(--teal);
+}
+
+.button-primary:hover {
+   background: var(--teal-dark);
+}
+
+.button-secondary {
+   color: var(--teal-dark);
+   background: #e3ebe5;
+}
+
+.status-message {
+   min-height: 24px;
+   margin: 28px 0 8px;
+   color: #a13e2b;
+   font: 700 .9rem Georgia, serif;
+}
+
+/* Login and registration pages */
+.auth-page {
+   width: min(520px, calc(100% - 40px));
+   padding-top: 12vh;
+}
+
+.auth-page > .eyebrow {
+   margin-bottom: 12px;
+}
+
+.auth-page h1 {
+   margin-bottom: 30px;
+   font-size: clamp(2.8rem, 8vw, 4.6rem);
+}
+
+.auth-section {
+   max-width: 520px;
+   padding: 28px;
+   background: var(--panel);
+   border: 1px solid var(--line);
+   box-shadow: var(--shadow);
+}
+
+.auth-section h2 {
+   margin-bottom: 22px;
+}
+
+.auth-section form {
+   display: grid;
+   gap: 12px;
+}
+
+.auth-section .status-message {
+   margin: 0 0 4px;
+}
+
+.auth-section form .button {
+   margin-top: 8px;
+}
+
+.auth-section > p {
+   margin: 22px 0 0;
+   color: var(--muted);
+   font-size: .95rem;
+}
+
+.auth-section a {
+   color: var(--teal);
+   font-weight: 700;
+}
+
+#register-section {
+   display: none;
+}
+
+#register-section:target {
+   display: block;
+}
+
+main:has(#register-section:target) #login-section {
+   display: none;
+}
+
+/* Contact directory */
+.directory-panel {
+   padding: 28px;
+   background: var(--panel);
+   border: 1px solid var(--line);
+   box-shadow: var(--shadow);
+}
+
+.directory-search {
+   padding-bottom: 26px;
+   border-bottom: 1px solid var(--line);
+}
+
+.directory-search form {
+   min-width: min(100%, 520px);
+}
+
+label {
+   display: block;
+   margin-bottom: 7px;
+   color: var(--muted);
+   font: 700 .78rem Georgia, serif;
+}
+
+.visually-hidden {
+   position: absolute;
+   width: 1px;
+   height: 1px;
+   padding: 0;
+   margin: -1px;
+   overflow: hidden;
+   clip: rect(0, 0, 0, 0);
+   white-space: nowrap;
+   border: 0;
+}
+
+input {
+   width: 100%;
+   border: 1px solid #b9c7bd;
+   border-radius: 2px;
+   color: var(--ink);
+   background: #fff;
+   padding: 12px 13px;
+   font: 1rem Georgia, serif;
+}
+
+input:focus {
+   outline: 3px solid rgba(216, 107, 79, .25);
+   border-color: var(--coral);
+}
+
+.search-controls {
+   display: flex;
+   gap: 10px;
+}
+
+.directory-panel > .section-heading {
+   margin-top: 26px;
+}
+
+.count-label {
+   color: var(--muted);
+   font: .8rem Georgia, serif;
+}
+
+.table-wrap {
+   overflow-x: auto;
+   margin-top: 22px;
+}
+
+table {
+   width: 100%;
+   border-collapse: collapse;
+   text-align: left;
+}
+
+th {
+   color: var(--muted);
+   font: 700 .72rem Georgia, serif;
+   letter-spacing: .08em;
+   text-transform: uppercase;
+}
+
+th,
+td {
+   padding: 15px 12px;
+   border-bottom: 1px solid var(--line);
+}
+
+th:first-child,
+td:first-child {
+   padding-left: 0;
+}
+
+th:last-child,
+td:last-child {
+   padding-right: 0;
+}
+
+.empty-row td {
+   padding: 34px 0;
+   color: var(--muted);
+   text-align: center;
+}
+
+.row-actions {
+   white-space: nowrap;
+}
+
+.text-button {
+   border: 0;
+   padding: 5px 0;
+   color: var(--teal);
+   background: transparent;
+   cursor: pointer;
+   font: 700 .82rem Georgia, serif;
+}
+
+.text-button + .text-button {
+   margin-left: 14px;
+}
+
+.text-button-danger {
+   color: var(--coral);
+}
+
+.contact-form {
+   display: grid;
+   grid-template-columns: 1fr 1fr;
+   gap: 16px 20px;
+   margin-top: 22px;
+}
+
+.contact-form label {
+   margin-bottom: -8px;
+}
+
+.form-actions {
+   grid-column: 1 / -1;
+   display: flex;
+   gap: 10px;
+   margin-top: 4px;
+}
+
+[hidden] {
+   display: none !important;
+}
+
+@media (max-width: 680px) {
+   main {
+      width: min(100% - 24px, 1120px);
+      padding-top: 32px;
+   }
+
+   .auth-page {
+      width: min(100% - 24px, 520px);
+      padding-top: 48px;
+   }
+
+   .contacts-page {
+      display: block;
+   }
+
+   .action-rail {
+      min-height: 0;
+      margin-bottom: 28px;
+      padding: 0 0 20px;
+      border-right: 0;
+      border-bottom: 1px solid var(--line);
+   }
+
+   .rail-actions {
+      margin-top: 28px;
+   }
+
+   .rail-actions .button {
+      width: auto;
+   }
+
+   .action-rail .editor-panel {
+      margin-top: 18px;
+   }
+
+   .page-header,
+   .directory-search,
+   .section-heading {
+      align-items: flex-start;
+      flex-direction: column;
+   }
+
+   .directory-search form {
+      width: 100%;
+   }
+
+   .search-controls {
+      align-items: stretch;
+      flex-direction: column;
+   }
+
+   .directory-panel {
+      padding: 20px 16px;
+   }
+
+   .contact-form {
+      grid-template-columns: 1fr;
+   }
+
+   .form-actions {
+      grid-column: auto;
+   }
+
+   th,
+   td {
+      min-width: 130px;
+   }
+
+   th:last-child,
+   td:last-child {
+      min-width: 150px;
+   }
+}

@@ -7,16 +7,96 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <!-- Search bar on top, contact list below, Add button, Edit/Delete per row. -->
-  <main>
-    <h1>My Contacts</h1>
+  <main class="contacts-page">
+    <aside class="action-rail" aria-label="Contact actions">
+      <div class="rail-actions">
+        <p class="eyebrow">Actions</p>
+        <button id="add-contact-button" class="button button-primary" type="button">Add Contact</button>
+      </div>
 
-    <!-- TODO: search input -->
-    <!-- TODO: contact list/table -->
-    <!-- TODO: add/edit contact form -->
-    <!-- TODO: error message area -->
+      <section class="editor-panel" aria-labelledby="contact-form-heading">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Details</p>
+            <h2 id="contact-form-heading">Add Contact</h2>
+          </div>
+        </div>
+        <form id="contact-form" class="contact-form" hidden>
+          <label class="visually-hidden" for="contact-id">Contact ID</label>
+          <input id="contact-id" name="id" type="hidden">
+
+          <label for="contact-first-name">First name</label>
+          <input id="contact-first-name" name="firstName" type="text" required>
+
+          <label for="contact-last-name">Last name</label>
+          <input id="contact-last-name" name="lastName" type="text" required>
+
+          <label for="contact-phone">Phone</label>
+          <input id="contact-phone" name="phone" type="tel">
+
+          <label for="contact-email">Email</label>
+          <input id="contact-email" name="email" type="email">
+
+          <div class="form-actions">
+            <button class="button button-primary" type="submit">Save contact</button>
+            <button id="cancel-contact-button" class="button button-secondary" type="button">Cancel</button>
+          </div>
+        </form>
+      </section>
+    </aside>
+
+    <div class="contacts-content">
+      <header class="page-header">
+        <div>
+          <p class="eyebrow">Contact Manager</p>
+          <h1>My Contacts</h1>
+        </div>
+        <button id="logout-button" class="button button-secondary" type="button">Log out</button>
+      </header>
+
+      <p id="contacts-error" class="status-message" role="alert" aria-live="polite"></p>
+
+      <section class="directory-panel" aria-labelledby="contact-list-heading">
+        <div class="directory-search">
+          <form id="search-form">
+            <label for="contact-search">Search</label>
+            <div class="search-controls">
+              <input id="contact-search" name="search" type="search" placeholder="Name, phone, or email">
+              <button class="button button-primary" type="submit">Search</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Your people</p>
+            <h2 id="contact-list-heading">Contact list</h2>
+          </div>
+          <span id="contact-count" class="count-label">0 contacts</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+        <thead>
+          <tr>
+            <th scope="col">First name</th>
+            <th scope="col">Last name</th>
+            <th scope="col">Phone</th>
+            <th scope="col">Email</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="contacts-list">
+          <tr class="empty-row">
+            <td colspan="5">No contacts to display.</td>
+          </tr>
+        </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
   </main>
 
+  <script src="js/api.js"></script>
   <script src="js/contacts.js"></script>
 </body>
 </html>
