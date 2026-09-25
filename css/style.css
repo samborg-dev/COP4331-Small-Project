@@ -83,15 +83,21 @@ h2 {
    width: 100%;
 }
 
-.action-rail .editor-panel {
-   margin: 28px 0 0;
-   padding: 0;
-   border: 0;
-   box-shadow: none;
+.contact-dialog {
+   width: min(100% - 32px, 520px);
+   border: 1px solid var(--line);
+   border-radius: 4px;
+   padding: 28px 30px 30px;
+   background: var(--panel);
+   color: var(--ink);
 }
 
-.action-rail .editor-panel .section-heading {
-   display: none;
+.contact-dialog::backdrop {
+   background: rgba(23, 42, 33, .45);
+}
+
+.dialog-heading h2 {
+   margin: 2px 0 0;
 }
 
 .contacts-content {
@@ -320,12 +326,26 @@ td:last-child {
 .contact-form {
    display: grid;
    grid-template-columns: 1fr 1fr;
-   gap: 16px 20px;
-   margin-top: 22px;
+   gap: 18px 20px;
+   margin-top: 20px;
 }
 
-.contact-form label {
-   margin-bottom: -8px;
+.field {
+   display: flex;
+   flex-direction: column;
+   gap: 6px;
+}
+
+.field-hint {
+   margin: 0;
+   color: var(--muted);
+   font-size: .8rem;
+}
+
+/* :user-invalid, not :invalid, so an empty field isn't marked as wrong before
+   the user has typed in it. */
+.contact-form input:user-invalid {
+   border-color: var(--coral);
 }
 
 .form-actions {
@@ -370,8 +390,8 @@ td:last-child {
       width: auto;
    }
 
-   .action-rail .editor-panel {
-      margin-top: 18px;
+   .contact-dialog {
+      padding: 22px 18px 24px;
    }
 
    .page-header,

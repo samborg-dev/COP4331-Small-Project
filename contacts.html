@@ -14,35 +14,6 @@
         <button id="add-contact-button" class="button button-primary" type="button">Add Contact</button>
       </div>
 
-      <section class="editor-panel" aria-labelledby="contact-form-heading">
-        <div class="section-heading">
-          <div>
-            <p class="eyebrow">Details</p>
-            <h2 id="contact-form-heading">Add Contact</h2>
-          </div>
-        </div>
-        <form id="contact-form" class="contact-form" hidden>
-          <label class="visually-hidden" for="contact-id">Contact ID</label>
-          <input id="contact-id" name="id" type="hidden">
-
-          <label for="contact-first-name">First name</label>
-          <input id="contact-first-name" name="firstName" type="text" required>
-
-          <label for="contact-last-name">Last name</label>
-          <input id="contact-last-name" name="lastName" type="text" required>
-
-          <label for="contact-phone">Phone</label>
-          <input id="contact-phone" name="phone" type="tel">
-
-          <label for="contact-email">Email</label>
-          <input id="contact-email" name="email" type="email">
-
-          <div class="form-actions">
-            <button class="button button-primary" type="submit">Save contact</button>
-            <button id="cancel-contact-button" class="button button-secondary" type="button">Cancel</button>
-          </div>
-        </form>
-      </section>
     </aside>
 
     <div class="contacts-content">
@@ -95,6 +66,50 @@
       </section>
     </div>
   </main>
+
+  <!-- The add/edit form opens as a modal over the page, so it gets room for
+       full-width fields instead of being squeezed into the action rail. -->
+  <dialog id="contact-dialog" class="contact-dialog" aria-labelledby="contact-form-heading">
+    <div class="dialog-heading">
+      <p class="eyebrow">Details</p>
+      <h2 id="contact-form-heading">Add Contact</h2>
+    </div>
+
+    <p id="contact-form-error" class="status-message" role="alert" aria-live="polite"></p>
+
+    <form id="contact-form" class="contact-form">
+      <label class="visually-hidden" for="contact-id">Contact ID</label>
+      <input id="contact-id" name="id" type="hidden">
+
+      <div class="field">
+        <label for="contact-first-name">First name</label>
+        <input id="contact-first-name" name="firstName" type="text" required>
+      </div>
+
+      <div class="field">
+        <label for="contact-last-name">Last name</label>
+        <input id="contact-last-name" name="lastName" type="text" required>
+      </div>
+
+      <div class="field">
+        <label for="contact-phone">Phone</label>
+        <input id="contact-phone" name="phone" type="tel" inputmode="numeric"
+               placeholder="123-123-1234" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" maxlength="12"
+               title="Use the format 123-123-1234" aria-describedby="contact-phone-hint">
+        <p id="contact-phone-hint" class="field-hint">Format: 123-123-1234</p>
+      </div>
+
+      <div class="field">
+        <label for="contact-email">Email</label>
+        <input id="contact-email" name="email" type="email">
+      </div>
+
+      <div class="form-actions">
+        <button class="button button-primary" type="submit">Save contact</button>
+        <button id="cancel-contact-button" class="button button-secondary" type="button">Cancel</button>
+      </div>
+    </form>
+  </dialog>
 
   <script src="js/api.js"></script>
   <script src="js/contacts.js"></script>
