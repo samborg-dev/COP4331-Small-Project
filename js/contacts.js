@@ -210,6 +210,19 @@ async function deleteContact(contact) {
   }
 }
 
+// Log out button: tell the server to end the session, then go to the login page.
+// "finally" means we go to the login page even if the request fails,
+// because the user clearly wants to leave.
+document.getElementById('logout-button').addEventListener('click', async () => {
+  try {
+    await apiCall('logout.php', {});
+  } finally {
+    window.location.href = 'index.html';
+  }
+});
+
 // Run once when the page opens.
-//loadContacts();
- renderContacts([{ id: 1, firstName: 'Test', lastName: 'Person', phone: '123', email: 'a@b.com' }]);
+loadContacts();
+
+// Used this line for testing, uncommented loadContacts(); and wrote this below it and ran open contacts.html in the terminal.
+// renderContacts([{ id: 1, firstName: 'Test', lastName: 'Person', phone: '123', email: 'a@b.com' }]);
