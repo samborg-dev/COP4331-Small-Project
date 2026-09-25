@@ -117,5 +117,42 @@ document.getElementById('search-form').addEventListener('submit', (event) => {
   loadContacts();
 });
 
+// The add/edit form and its heading ("Add Contact" or "Edit Contact").
+const contactForm = document.getElementById('contact-form');
+const formHeading = document.getElementById('contact-form-heading');
+
+// Shows the form. Pass nothing (null) for Add, or a contact object for Edit
+// to fill the form with that contact's current details.
+function openContactForm(contact) {
+  contactForm.reset();
+
+  if (contact) {
+    contactForm.elements.id.value = contact.id;
+    contactForm.elements.firstName.value = contact.firstName || '';
+    contactForm.elements.lastName.value = contact.lastName || '';
+    contactForm.elements.phone.value = contact.phone || '';
+    contactForm.elements.email.value = contact.email || '';
+    formHeading.textContent = 'Edit Contact';
+  } else {
+    contactForm.elements.id.value = '';
+    formHeading.textContent = 'Add Contact';
+  }
+
+  contactForm.hidden = false;
+  contactForm.elements.firstName.focus();
+}
+
+// Hides and clears the form.
+function closeContactForm() {
+  contactForm.reset();
+  contactForm.hidden = true;
+  formHeading.textContent = 'Add Contact';
+}
+
+document.getElementById('add-contact-button').addEventListener('click', () => {
+  openContactForm(null);
+});
+
+document.getElementById('cancel-contact-button').addEventListener('click', closeContactForm);
 // Run once when the page opens.
 loadContacts();
