@@ -17,6 +17,7 @@
 const listEl = document.getElementById('contacts-list');
 const countEl = document.getElementById('contact-count');
 const errorEl = document.getElementById('contacts-error');
+const searchBox = document.getElementById('contact-search');
 
 // Calls the API and handles every failure in one place.
 // Returns the server's answer if it worked, or null if it failed
@@ -83,13 +84,38 @@ function renderContacts(contacts) {
   countEl.textContent = contacts.length + (contacts.length === 1 ? ' contact' : ' contacts');
 }
 
-// Asks the server for contacts. An empty search returns all of them.
+// Counts searches so a slow, older answer from the server can't
+// replace the results of a newer search that already came back.
+let latestSearch = 0;
+
+// Asks the server for contacts matching what's in the search box.
+// An empty search box returns all contacts.
 async function loadContacts() {
-  const result = await callApi('searchContacts.php', { search: '' });
-  if (result) {
+  latestSearch = latestSearch + 1;
+  const thisSearch = latestSearch;
+
+  const result = await callApi('searchContacts.php', { search: searchBox.value.trim() });
+
+  if (result && thisSearch === latestSearch) {
     renderContacts(result.results);
   }
 }
+
+// Search hits the server every time (filtering in JavaScript is not allowed).
+// Debounce: wait until the user stops typing for 300ms, then send ONE request,
+// instead of one request per key press.
+let searchTimer;
+searchBox.addEventListener('input', () => {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(loadContacts, 300);
+});
+
+// Pressing Enter or clicking the Search button searches right away.
+document.getElementById('search-form').addEventListener('submit', (event) => {
+  event.preventDefault();
+  clearTimeout(searchTimer);
+  loadContacts();
+});
 
 // Run once when the page opens.
 loadContacts();
