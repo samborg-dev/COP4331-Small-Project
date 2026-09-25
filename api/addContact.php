@@ -13,9 +13,14 @@ $userId = requireLogin();
 
 $input = getJsonInput();
 
+$phone = normalizePhone($input['phone'] ?? '');
+if ($phone === false) {
+    sendError('Phone must be 10 digits, like 123-123-1234');
+}
+
 $stmt = $pdo->prepare("INSERT INTO Contacts (FirstName, LastName, Phone, Email, UserID) VALUES(? ,? ,? ,? ,?)");
 
-$stmt->execute([$input['firstName'], $input['lastName'], $input['phone'], $input['email'], $userId]);
+$stmt->execute([$input['firstName'], $input['lastName'], $phone, $input['email'], $userId]);
 
 sendJson(['id' => (int) $pdo->lastInsertId(), 'error' => '']);
 

@@ -5,7 +5,18 @@
 const listEl = document.getElementById('contacts-list');
 const countEl = document.getElementById('contact-count');
 const errorEl = document.getElementById('contacts-error');
+const formErrorEl = document.getElementById('contact-form-error');
 const searchBox = document.getElementById('contact-search');
+
+// A message about the page goes above the list, but while the modal is open it
+// would be hidden behind it, so the modal shows its own copy instead.
+function showError(message) {
+  if (document.getElementById('contact-dialog').open) {
+    formErrorEl.textContent = message;
+    return;
+  }
+  errorEl.textContent = message;
+}
 
 // Calls the API and handles every failure in one place.
 // Returns the server's answer if it worked, or null if it failed
@@ -15,7 +26,7 @@ async function callApi(endpoint, payload) {
   try {
     result = await apiCall(endpoint, payload);
   } catch (err) {
-    errorEl.textContent = 'Could not reach the server. Please try again.';
+    showError('Could not reach the server. Please try again.');
     return null;
   }
 
@@ -27,12 +38,13 @@ async function callApi(endpoint, payload) {
 
   // Any other error text from the server: show it.
   if (result.error) {
-    errorEl.textContent = result.error;
+    showError(result.error);
     return null;
   }
 
   // It worked: clear any old error message.
   errorEl.textContent = '';
+  formErrorEl.textContent = '';
   return result;
 }
 
@@ -127,20 +139,43 @@ document.getElementById('search-form').addEventListener('submit', (event) => {
   loadContacts();
 });
 
-// The add/edit form and its heading ("Add Contact" or "Edit Contact").
+// The add/edit form, the modal it sits in, and its heading
+// ("Add Contact" or "Edit Contact").
 const contactForm = document.getElementById('contact-form');
+const contactDialog = document.getElementById('contact-dialog');
 const formHeading = document.getElementById('contact-form-heading');
+
+// Phone numbers are stored as 123-123-1234. Takes whatever the user typed,
+// keeps the first 10 digits, and puts the dashes in as they go.
+function formatPhone(value) {
+  const digits = value.replace(/\D/g, '').slice(0, 10);
+
+  if (digits.length > 6) {
+    return digits.slice(0, 3) + '-' + digits.slice(3, 6) + '-' + digits.slice(6);
+  }
+  if (digits.length > 3) {
+    return digits.slice(0, 3) + '-' + digits.slice(3);
+  }
+  return digits;
+}
+
+// Re-format on every keystroke so the field can't hold anything else.
+contactForm.elements.phone.addEventListener('input', (event) => {
+  event.target.value = formatPhone(event.target.value);
+});
 
 // Shows the form. Pass nothing (null) for Add, or a contact object for Edit
 // to fill the form with that contact's current details.
 function openContactForm(contact) {
   contactForm.reset();
+  formErrorEl.textContent = '';
 
   if (contact) {
     contactForm.elements.id.value = contact.id;
     contactForm.elements.firstName.value = contact.firstName || '';
     contactForm.elements.lastName.value = contact.lastName || '';
-    contactForm.elements.phone.value = contact.phone || '';
+    // Older contacts were saved before the format existed, so format them now.
+    contactForm.elements.phone.value = formatPhone(contact.phone || '');
     contactForm.elements.email.value = contact.email || '';
     formHeading.textContent = 'Edit Contact';
   } else {
@@ -148,16 +183,24 @@ function openContactForm(contact) {
     formHeading.textContent = 'Add Contact';
   }
 
-  contactForm.hidden = false;
+  contactDialog.showModal();
   contactForm.elements.firstName.focus();
 }
 
-// Hides and clears the form.
+// Closes and clears the form.
 function closeContactForm() {
   contactForm.reset();
-  contactForm.hidden = true;
+  formErrorEl.textContent = '';
+  contactDialog.close();
   formHeading.textContent = 'Add Contact';
 }
+
+// Esc closes the modal, so clear the form then too.
+contactDialog.addEventListener('close', () => {
+  contactForm.reset();
+  formErrorEl.textContent = '';
+  formHeading.textContent = 'Add Contact';
+});
 
 document.getElementById('add-contact-button').addEventListener('click', () => {
   openContactForm(null);
