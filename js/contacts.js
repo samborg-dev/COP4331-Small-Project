@@ -1,15 +1,3 @@
-// Main front-end logic: load, add, edit, delete, search.
-// Uses apiCall() from api.js — add <script src="js/api.js"></script> above this
-// tag in contacts.html.
-//
-// TODO: load contacts on page load (empty search returns everything)
-// TODO: add / edit / delete handlers
-// TODO: search — must hit the server on every query. Filtering a cached array
-//       in JS is explicitly forbidden and costs 5 points.
-// TODO: debounce the search input ~300ms so you don't fire one request per
-//       keystroke. Worth mentioning in the presentation.
-// TODO: redirect to index.html if any call returns a "Not logged in" error.
-
 // Main front-end logic for contacts.html: load, add, edit, delete, search.
 // Uses apiCall() from api.js, which is loaded above this script in contacts.html.
 
@@ -56,6 +44,18 @@ function makeCell(text) {
   return cell;
 }
 
+// Makes one small text button for a table row (Edit or Delete).
+// aria-label tells screen readers which contact the button is for,
+// e.g. "Delete John Smith" instead of just "Delete".
+function makeButton(label, contact) {
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = 'text-button';
+  button.textContent = label;
+  button.setAttribute('aria-label', label + ' ' + contact.firstName + ' ' + contact.lastName);
+  return button;
+}
+
 // Draws the table from an array of contacts sent by the server.
 function renderContacts(contacts) {
   listEl.replaceChildren();
@@ -68,19 +68,29 @@ function renderContacts(contacts) {
     row.append(cell);
     listEl.append(row);
   }
-
   for (const contact of contacts) {
     const row = document.createElement('tr');
+
+    const editButton = makeButton('Edit', contact);
+    editButton.addEventListener('click', () => openContactForm(contact));
+
+    const deleteButton = makeButton('Delete', contact);
+    deleteButton.classList.add('text-button-danger');
+    deleteButton.addEventListener('click', () => deleteContact(contact));
+
+    const actionsCell = document.createElement('td');
+    actionsCell.className = 'row-actions';
+    actionsCell.append(editButton, deleteButton);
+
     row.append(
       makeCell(contact.firstName),
       makeCell(contact.lastName),
       makeCell(contact.phone),
       makeCell(contact.email),
-      makeCell('')   // placeholder for the Edit/Delete buttons (added in a later chunk)
+      actionsCell
     );
     listEl.append(row);
   }
-
   countEl.textContent = contacts.length + (contacts.length === 1 ? ' contact' : ' contacts');
 }
 
@@ -154,5 +164,52 @@ document.getElementById('add-contact-button').addEventListener('click', () => {
 });
 
 document.getElementById('cancel-contact-button').addEventListener('click', closeContactForm);
+
+// Save button: send the form to the server.
+// If the hidden id field is empty it's a new contact (Add),
+// otherwise it's an existing contact (Edit).
+contactForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+
+  const idValue = contactForm.elements.id.value;
+  const payload = {
+    firstName: contactForm.elements.firstName.value.trim(),
+    lastName: contactForm.elements.lastName.value.trim(),
+    phone: contactForm.elements.phone.value.trim(),
+    email: contactForm.elements.email.value.trim()
+  };
+
+  let endpoint = 'addContact.php';
+  if (idValue !== '') {
+    endpoint = 'editContact.php';
+    payload.id = Number(idValue);
+  }
+
+  // Disable Save while waiting so a double-click can't create two contacts.
+  const saveButton = contactForm.querySelector('button[type="submit"]');
+  saveButton.disabled = true;
+  const result = await callApi(endpoint, payload);
+  saveButton.disabled = false;
+
+  if (result) {
+    closeContactForm();
+    loadContacts();
+  }
+});
+
+// Asks "are you sure?", then deletes the contact and reloads the list.
+async function deleteContact(contact) {
+  const sure = confirm('Delete ' + contact.firstName + ' ' + contact.lastName + '?');
+  if (!sure) {
+    return;
+  }
+
+  const result = await callApi('deleteContact.php', { id: Number(contact.id) });
+  if (result) {
+    loadContacts();
+  }
+}
+
 // Run once when the page opens.
-loadContacts();
+//loadContacts();
+ renderContacts([{ id: 1, firstName: 'Test', lastName: 'Person', phone: '123', email: 'a@b.com' }]);
