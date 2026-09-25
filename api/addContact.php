@@ -1,5 +1,3 @@
-// Last updated: 2024-06-04
-// By Arwa
 <?php
 // POST /api/addContact.php
 //
