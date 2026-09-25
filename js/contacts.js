@@ -9,3 +9,87 @@
 // TODO: debounce the search input ~300ms so you don't fire one request per
 //       keystroke. Worth mentioning in the presentation.
 // TODO: redirect to index.html if any call returns a "Not logged in" error.
+
+// Main front-end logic for contacts.html: load, add, edit, delete, search.
+// Uses apiCall() from api.js, which is loaded above this script in contacts.html.
+
+// Grab the parts of the page we need to change.
+const listEl = document.getElementById('contacts-list');
+const countEl = document.getElementById('contact-count');
+const errorEl = document.getElementById('contacts-error');
+
+// Calls the API and handles every failure in one place.
+// Returns the server's answer if it worked, or null if it failed
+// (the error message is already shown on the page).
+async function callApi(endpoint, payload) {
+  let result;
+  try {
+    result = await apiCall(endpoint, payload);
+  } catch (err) {
+    errorEl.textContent = 'Could not reach the server. Please try again.';
+    return null;
+  }
+
+  // The session expired or the user never logged in: send them to the login page.
+  if (result.error === 'Not logged in') {
+    window.location.href = 'index.html';
+    return null;
+  }
+
+  // Any other error text from the server: show it.
+  if (result.error) {
+    errorEl.textContent = result.error;
+    return null;
+  }
+
+  // It worked: clear any old error message.
+  errorEl.textContent = '';
+  return result;
+}
+
+// Makes one table cell. textContent (not innerHTML) keeps a contact's name
+// as plain text, so a name containing HTML or script can't run.
+function makeCell(text) {
+  const cell = document.createElement('td');
+  cell.textContent = text || '';
+  return cell;
+}
+
+// Draws the table from an array of contacts sent by the server.
+function renderContacts(contacts) {
+  listEl.replaceChildren();
+
+  if (contacts.length === 0) {
+    const row = document.createElement('tr');
+    row.className = 'empty-row';
+    const cell = makeCell('No contacts to display.');
+    cell.colSpan = 5;
+    row.append(cell);
+    listEl.append(row);
+  }
+
+  for (const contact of contacts) {
+    const row = document.createElement('tr');
+    row.append(
+      makeCell(contact.firstName),
+      makeCell(contact.lastName),
+      makeCell(contact.phone),
+      makeCell(contact.email),
+      makeCell('')   // placeholder for the Edit/Delete buttons (added in a later chunk)
+    );
+    listEl.append(row);
+  }
+
+  countEl.textContent = contacts.length + (contacts.length === 1 ? ' contact' : ' contacts');
+}
+
+// Asks the server for contacts. An empty search returns all of them.
+async function loadContacts() {
+  const result = await callApi('searchContacts.php', { search: '' });
+  if (result) {
+    renderContacts(result.results);
+  }
+}
+
+// Run once when the page opens.
+loadContacts();
