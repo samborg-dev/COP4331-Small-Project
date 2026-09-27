@@ -16,6 +16,8 @@ $password = $input['password'] ?? '';
 
 if ($login === '' || $password === '') {
     sendError('Username and password are required');
+    http_response_code(401);
+    
 }
 
 $stmt = $pdo->prepare('SELECT UserID, FirstName, LastName, PasswordHash FROM Users WHERE UserName = ?');
