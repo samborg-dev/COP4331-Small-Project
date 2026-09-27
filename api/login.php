@@ -23,6 +23,7 @@ $stmt->execute([$login]);
 $user = $stmt->fetch();
 
 if (!$user || !password_verify($password, $user['PasswordHash'])) {
+    http_response_code(401);
     sendJson(['id' => 0, 'firstName' => '', 'lastName' => '', 'error' => 'Invalid username or password']);
 }
 
