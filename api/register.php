@@ -27,12 +27,17 @@ if ($stmt->fetch()) {
 }
 
 $stmt = $pdo->prepare(
-    'INSERT INTO Users (FirstName, LastName, Phone, UserName, PasswordHash) VALUES (?, ?, ?, ?, ?)'
-);
-
-try {
-    $stmt->execute([$firstName, $lastName, $phone === '' ? null : $phone, $login,
-                    password_hash($password, PASSWORD_DEFAULT)]);
+    'INSERT INTO Users (FirstName, LastName, MiddleName, Email, Phone, UserName, PasswordHash) VALUES (?, ?, ?, ?, ?, ?, ?)'
+);try {
+    $stmt->execute([
+        $firstName, 
+        $lastName, 
+        '', // Satisfies MiddleName constraint
+        '', // Satisfies Email constraint
+        $phone === '' ? null : $phone, 
+        $login, 
+        password_hash($password, PASSWORD_DEFAULT)
+    ]);
 } catch (PDOException $e) {
     // 23000 = the UNIQUE key on UserName, if two signups race past the check above.
     if ($e->getCode() === '23000') {
