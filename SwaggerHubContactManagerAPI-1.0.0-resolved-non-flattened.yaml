@@ -4,9 +4,7 @@ info:
   description: REST API for COP 4331 Contact Manager Project
   version: 1.0.0
 servers:
-- url: https://virtserver.swaggerhub.com/ucf-30a/ContactManagerAPI/1.0.0
-  description: SwaggerHub API Auto Mocking
-- url: http://cop4331ucfproject.com/dev-test/api
+- url: http://cop4331ucfproject.com/api
   description: Live Production Server
 paths:
   /login.php:
