@@ -1,0 +1,79 @@
+openapi: 3.0.0
+info:
+  title: Personal Contact Manager API
+  description: REST API for COP 4331 Contact Manager Project
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/ucf-30a/ContactManagerAPI/1.0.0
+  description: SwaggerHub API Auto Mocking
+- url: http://cop4331ucfproject.com/dev-test/api
+  description: Live Production Server
+paths:
+  /login.php:
+    post:
+      summary: Authenticates a user
+      description: "Accepts a JSON payload with a login and password. Returns user details on success, or an error message if fields are missing/invalid."
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+              - login
+              - password
+              type: object
+              properties:
+                login:
+                  type: string
+                  example: JDoe2
+                password:
+                  type: string
+                  example: Password123!
+        required: true
+      responses:
+        "200":
+          description: Successful login response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  firstName:
+                    type: string
+                  lastName:
+                    type: string
+                  error:
+                    type: string
+              example:
+                id: 42
+                firstName: John
+                lastName: Doe
+                error: ""
+        "401":
+          description: Unauthorized response - Invalid credentials or missing fields
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  firstName:
+                    type: string
+                  lastName:
+                    type: string
+                  error:
+                    type: string
+              examples:
+                InvalidCredentials:
+                  summary: Bad Username or Password
+                  value:
+                    id: 0
+                    firstName: ""
+                    lastName: ""
+                    error: Invalid username or password
+                MissingFields:
+                  summary: Blank Username or Password
+                  value:
+                    error: Username and password are required
