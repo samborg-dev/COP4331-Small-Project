@@ -1,20 +1,20 @@
-password hash was created with php password_hash generator
+-- password hash was created with php password_hash generator
 
-actual passwords for test users:
-John Doe:
-Password123
+-- actual passwords for test users:
+-- John Doe:
+-- Password123
 
-Morgan Freeman:
-Morgan5
+-- Morgan Freeman:
+-- Morgan5
 
 
 
-Users insert commands:
+-- Users insert commands:
 INSERT INTO Users (`PasswordHash`,`UserID`,`FirstName`,`LastName`,`CreatedAt`,`MiddleName`,`UserName`,`Email`,`Phone`) VALUES ('$2y$10$0nWqyhv43r0tVVgZo2CmUO7d7nVlo1NLL9cjTKIevdiE/6wpe2FlS',2,'John','Doe','2026-09-11 23:41:25','Jim','JDoe','doe@gmail.com','4071111111');
 INSERT INTO Users (`PasswordHash`,`UserID`,`FirstName`,`LastName`,`CreatedAt`,`MiddleName`,`UserName`,`Email`,`Phone`) VALUES ('$2y$10$o95os6nBoBmqy0K3V4TF2eb0s0hKJbVleAI.8u2J6MoPgQoofY7Wi',3,'Morgan','Freeman','2026-09-11 23:49:45','Porterfield','MorganFreeman','Freeman@outlook.com','4072111111');
 
 
-Contacts insert commands:
+-- Contacts insert commands:
 INSERT INTO Contacts (`FirstName`,`LastName`,`Email`,`Phone`,`DateCreated`,`DateUpdated`,`ContactID`,`UserID`) VALUES ('Ammar','James','james@hotmail.com','4076789012','2026-09-11 23:57:45','2026-09-11 23:57:45',2,2);
 INSERT INTO Contacts (`FirstName`,`LastName`,`Email`,`Phone`,`DateCreated`,`DateUpdated`,`ContactID`,`UserID`) VALUES ('Lily','Clay','LClay@gmail.com','4081921234','2026-09-11 23:58:28','2026-09-11 23:58:28',3,2);
 INSERT INTO Contacts (`FirstName`,`LastName`,`Email`,`Phone`,`DateCreated`,`DateUpdated`,`ContactID`,`UserID`) VALUES ('Sean','Leach','SeanLeach','3017891243','2026-09-11 23:59:05','2026-09-11 23:59:05',4,3);
